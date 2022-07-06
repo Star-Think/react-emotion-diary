@@ -16,7 +16,12 @@ const Edit = () => {
   const diaryList = useContext(DiaryStateContext);
 
   useEffect(() => {
-    if (diaryList.length > 1) {
+    const titleElement = document.getElementsByTagName("title")[0];
+    titleElement.innerHTML = `감정 일기장 - ${id}번 일기 수정`;
+  }, []);
+
+  useEffect(() => {
+    if (diaryList.length >= 1) {
       const targetDiary = diaryList.find(
         (it) => parseInt(it.id) === parseInt(id)
       );
@@ -45,7 +50,6 @@ const Edit = () => {
         뒤로가기
       </button> */}
       {originData && <DiaryEditor isEdit={true} originData={originData} />}
-      <h2>Edit</h2>
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useReducer, useRef } from "react";
+import React, { useEffect, useReducer, useRef } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 
@@ -30,49 +30,62 @@ const reducer = (state, action) => {
     default:
       return state;
   }
+  localStorage.setItem("diary", JSON.stringify(newState));
   return newState;
 };
 
 export const DiaryStateContext = React.createContext();
 export const DiaryDispatchContext = React.createContext();
 
-const dummyData = [
-  {
-    id: 1,
-    emotion: 1,
-    content: "오늘의일기 1번",
-    date: 1656917443290,
-  },
-  {
-    id: 2,
-    emotion: 2,
-    content: "오늘의일기 2번",
-    date: 1656917443291,
-  },
-  {
-    id: 3,
-    emotion: 3,
-    content: "오늘의일기 3번",
-    date: 1656917443292,
-  },
-  {
-    id: 4,
-    emotion: 4,
-    content: "오늘의일기 4번",
-    date: 1656917443293,
-  },
-  {
-    id: 5,
-    emotion: 5,
-    content: "오늘의일기 5번",
-    date: 1656917443294,
-  },
-];
+// const dummyData = [
+//   {
+//     id: 1,
+//     emotion: 1,
+//     content: "오늘의일기 1번",
+//     date: 1656917443290,
+//   },
+//   {
+//     id: 2,
+//     emotion: 2,
+//     content: "오늘의일기 2번",
+//     date: 1656917443291,
+//   },
+//   {
+//     id: 3,
+//     emotion: 3,
+//     content: "오늘의일기 3번",
+//     date: 1656917443292,
+//   },
+//   {
+//     id: 4,
+//     emotion: 4,
+//     content: "오늘의일기 4번",
+//     date: 1656917443293,
+//   },
+//   {
+//     id: 5,
+//     emotion: 5,
+//     content: "오늘의일기 5번",
+//     date: 1656917443294,
+//   },
+// ];
 
 function App() {
-  const [data, dispatch] = useReducer(reducer, dummyData);
+  const [data, dispatch] = useReducer(reducer, []);
 
-  const dataId = useRef(6);
+  useEffect(() => {
+    const localData = localStorage.getItem("diary");
+    if (localData && JSON.parse(localData).length > 0) {
+      const diaryList = JSON.parse(localData).sort(
+        (a, b) => parseInt(b.id) - parseInt(a.id)
+      );
+      dataId.current = parseInt(diaryList[0].id) + 1;
+
+      dispatch({ type: "INIT", data: diaryList });
+    }
+  }, []);
+
+  const dataId = useRef(0);
   // CREATE
   const onCreate = (date, content, emotion) => {
     dispatch({
