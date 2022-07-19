@@ -9,7 +9,7 @@ const EmotionItem = ({
 }) => {
   return (
     <div
-      onClick={() => onClick(() => onClick(emotion_id))}
+      onClick={() => onClick(emotion_id)}
       className={[
         "EmotionItem",
         isSelected ? `EmotionItem_on_${emotion_id}` : "EmotionItem_off",
